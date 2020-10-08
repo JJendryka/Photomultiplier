@@ -449,7 +449,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="terminalDock">
+  <widget class="TerminalDock" name="terminalDock">
    <property name="windowTitle">
     <string>Terminal</string>
    </property>
@@ -505,6 +505,17 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TerminalDock</class>
+   <extends>QDockWidget</extends>
+   <header>terminaldock.h</header>
+   <container>1</container>
+   <slots>
+    <slot>send()</slot>
+   </slots>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>laserStatusButton</tabstop>
   <tabstop>photomultiplierStatusButton</tabstop>
@@ -532,5 +543,22 @@
   <tabstop>terminalTextBrowser</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>terminalSendButton</sender>
+   <signal>clicked()</signal>
+   <receiver>terminalDock</receiver>
+   <slot>send()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>757</x>
+     <y>478</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>669</x>
+     <y>442</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

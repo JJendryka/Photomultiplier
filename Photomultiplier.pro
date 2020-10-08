@@ -10,10 +10,12 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    terminaldock.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    terminaldock.h
 
 FORMS += \
     mainwindow.ui
