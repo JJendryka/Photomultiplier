@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets charts
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets charts serialport
 
 CONFIG += c++11
 
@@ -11,10 +11,14 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    packet.cpp \
+    serialport.cpp \
     terminaldock.cpp
 
 HEADERS += \
     mainwindow.h \
+    packet.h \
+    serialport.h \
     terminaldock.h
 
 FORMS += \

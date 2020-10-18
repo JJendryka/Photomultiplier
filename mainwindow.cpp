@@ -7,6 +7,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , serial(this)
 {
     ui->setupUi(this);
     QLineSeries *series = new QLineSeries();
@@ -27,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     chartView->setRenderHint(QPainter::Antialiasing);
 
     setCentralWidget(chartView);
+    serial.openPort();
 }
 
 MainWindow::~MainWindow()
