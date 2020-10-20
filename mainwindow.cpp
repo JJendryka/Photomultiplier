@@ -14,8 +14,48 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    createDocks();
+    createMenu();
 
+    createDocks();
+    createPlot();
+
+    serial.openPort();
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::createDocks() {
+    createControlDock();
+    createMeasurementDock();
+    createTerminalDock();
+}
+
+void MainWindow::createControlDock() {
+    ControlDock *dock = new ControlDock(this);
+    addDockWidget(Qt::RightDockWidgetArea, dock);
+    viewMenu->addAction(dock->toggleViewAction());
+}
+
+void MainWindow::createMeasurementDock() {
+    MeasurementDock *dock = new MeasurementDock(this);
+    addDockWidget(Qt::BottomDockWidgetArea, dock);
+    viewMenu->addAction(dock->toggleViewAction());
+}
+
+void MainWindow::createTerminalDock() {
+    TerminalDock *dock = new TerminalDock(this);
+    addDockWidget(Qt::BottomDockWidgetArea, dock);
+    viewMenu->addAction(dock->toggleViewAction());
+}
+
+void MainWindow::createMenu() {
+    viewMenu = menuBar()->addMenu("View");
+}
+
+void MainWindow::createPlot() {
     QLineSeries *series = new QLineSeries();
     series->append(0, 6);
     series->append(2, 4);
@@ -34,31 +74,4 @@ MainWindow::MainWindow(QWidget *parent)
     chartView->setRenderHint(QPainter::Antialiasing);
 
     setCentralWidget(chartView);
-    serial.openPort();
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
-void MainWindow::createDocks() {
-    createControlDock();
-    createMeasurementDock();
-    createTerminalDock();
-}
-
-void MainWindow::createControlDock() {
-    ControlDock *dock = new ControlDock(this);
-    addDockWidget(Qt::RightDockWidgetArea, dock);
-}
-
-void MainWindow::createMeasurementDock() {
-    MeasurementDock *dock = new MeasurementDock(this);
-    addDockWidget(Qt::BottomDockWidgetArea, dock);
-}
-
-void MainWindow::createTerminalDock() {
-    TerminalDock *dock = new TerminalDock(this);
-    addDockWidget(Qt::BottomDockWidgetArea, dock);
 }

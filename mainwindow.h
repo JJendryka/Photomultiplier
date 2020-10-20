@@ -17,12 +17,16 @@ public:
     ~MainWindow();
 
 private:
+    void createMenu();
 
     void createDocks();
     void createControlDock();
     void createMeasurementDock();
     void createTerminalDock();
 
+    void createPlot();
+
+    QMenu *viewMenu;
     Ui::MainWindow *ui;
     SerialPort serial;
 };
