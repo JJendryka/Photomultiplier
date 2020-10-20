@@ -11,14 +11,14 @@ Packet* Packet::parsePacket(QString string)
 {
     switch (string.toStdString()[0]) {
         case ERROR:
-            return new Error(string);
+            return new ErrorPacket(string);
         case MEASUREMENT_RESULT:
-            return new MeasuremetResult(string);
+            return new MeasuremetResultPacket(string);
         case CURRENT_POSITION:
-            return new CurrentPosition(string);
+            return new CurrentPositionPacker(string);
         case ENDSTOP_STATE:
-            return new EndstopState(string);
+            return new EndstopStatePacket(string);
         default:
-            return new Error("E Unrecognized packet: " + string);
+            return new ErrorPacket("E Unrecognized packet: " + string);
     }
 }

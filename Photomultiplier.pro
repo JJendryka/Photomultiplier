@@ -9,20 +9,27 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    controldock.cpp \
     main.cpp \
     mainwindow.cpp \
+    measurementdock.cpp \
     packet.cpp \
     serialport.cpp \
     terminaldock.cpp
 
 HEADERS += \
+    controldock.h \
     mainwindow.h \
+    measurementdock.h \
     packet.h \
     serialport.h \
     terminaldock.h
 
 FORMS += \
-    mainwindow.ui
+    controldock.ui \
+    mainwindow.ui \
+    measurementdock.ui \
+    terminaldock.ui
 
 
 # Default rules for deployment.

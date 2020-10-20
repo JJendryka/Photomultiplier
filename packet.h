@@ -38,36 +38,36 @@ public:
 
 Q_DECLARE_METATYPE(SendablePacket*);
 
-class Error : public Packet {
+class ErrorPacket : public Packet {
 public:
-    Error(QString string) : Packet(ERROR) {
+    ErrorPacket(QString string) : Packet(ERROR) {
         error = string.right(string.size()-2);
     }
 
     QString error;
 };
 
-class MeasuremetResult : public Packet {
+class MeasuremetResultPacket : public Packet {
 public:
-    MeasuremetResult(QString string) : Packet(MEASUREMENT_RESULT) {
+    MeasuremetResultPacket(QString string) : Packet(MEASUREMENT_RESULT) {
         value = string.split(" ")[1].toInt();
     }
 
     unsigned long value;
 };
 
-class CurrentPosition : public Packet {
+class CurrentPositionPacker : public Packet {
 public:
-    CurrentPosition(QString string) : Packet(CURRENT_POSITION) {
+    CurrentPositionPacker(QString string) : Packet(CURRENT_POSITION) {
         position = string.split(" ")[1].toInt();
     }
 
     unsigned long position;
 };
 
-class EndstopState : public Packet {
+class EndstopStatePacket : public Packet {
 public:
-    EndstopState(QString string) : Packet(ENDSTOP_STATE) {
+    EndstopStatePacket(QString string) : Packet(ENDSTOP_STATE) {
         state = (string.split(" ")[1].toInt() == 1);
     }
 

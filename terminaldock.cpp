@@ -1,12 +1,8 @@
-#include <iostream>
-
 #include "terminaldock.h"
+#include "ui_terminaldock.h"
 
-TerminalDock::TerminalDock(QWidget *parent) : QDockWidget(parent)
+TerminalDock::TerminalDock(QWidget *parent) :
+    QDockWidget(parent)
 {
-
-}
-
-void TerminalDock::send() {
-    std::cout<<"SEND!";
+    setupUi(this);
 }

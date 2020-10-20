@@ -17,6 +17,12 @@ public:
     ~MainWindow();
 
 private:
+
+    void createDocks();
+    void createControlDock();
+    void createMeasurementDock();
+    void createTerminalDock();
+
     Ui::MainWindow *ui;
     SerialPort serial;
 };

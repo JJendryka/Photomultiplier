@@ -2,6 +2,9 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "controldock.h"
+#include "measurementdock.h"
+#include "terminaldock.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -10,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     , serial(this)
 {
     ui->setupUi(this);
+
+    createDocks();
+
     QLineSeries *series = new QLineSeries();
     series->append(0, 6);
     series->append(2, 4);
@@ -36,3 +42,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::createDocks() {
+    createControlDock();
+    createMeasurementDock();
+    createTerminalDock();
+}
+
+void MainWindow::createControlDock() {
+    ControlDock *dock = new ControlDock(this);
+    addDockWidget(Qt::RightDockWidgetArea, dock);
+}
+
+void MainWindow::createMeasurementDock() {
+    MeasurementDock *dock = new MeasurementDock(this);
+    addDockWidget(Qt::BottomDockWidgetArea, dock);
+}
+
+void MainWindow::createTerminalDock() {
+    TerminalDock *dock = new TerminalDock(this);
+    addDockWidget(Qt::BottomDockWidgetArea, dock);
+}
