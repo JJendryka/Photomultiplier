@@ -1,3 +1,5 @@
+#include <QMessageBox>
+
 #include "controldock.h"
 #include "ui_controldock.h"
 
@@ -7,6 +9,10 @@ ControlDock::ControlDock(QWidget *parent) :
     setupUi(this);
     connectObjects();
     setupSlider();
+
+    positionTimer.setSingleShot(true);
+    voltageTimer.setSingleShot(true);
+    thresholdTimer.setSingleShot(true);
 }
 
 void ControlDock::connectObjects() {
@@ -17,19 +23,37 @@ void ControlDock::connectObjects() {
 
     connect(positionHomeButton, &QPushButton::clicked, this, &ControlDock::onHomeClicked);
 
-    connect(positionSlider, &QSlider::valueChanged, this, &ControlDock::onSliderMoved);
-    connect(positionSlider, &QSlider::sliderReleased, this, &ControlDock::onSliderReleased);
+    connect(positionSlider, &QSlider::valueChanged, this, &ControlDock::onPositionSliderMoved);
 
     connect(positionLineEdit, &QLineEdit::returnPressed, this, &ControlDock::onValueEntered);
+
+    connect(thresholdSlider, &QSlider::valueChanged, this, &ControlDock::onThresholdSliderMoved);
+    connect(voltageSlider, &QSlider::valueChanged, this, &ControlDock::onVoltageSliderMoved);
+
+    connect(&positionTimer, &QTimer::timeout, this, &ControlDock::sendTargetPosition);
+    connect(&thresholdTimer, &QTimer::timeout, this, &ControlDock::sendThreshold);
+    connect(&voltageTimer, &QTimer::timeout, this, &ControlDock::sendVoltage);
+
+    connect(photomultiplierStatusButton, &QPushButton::clicked, this, &ControlDock::onAmplifierButtonClicked);
+
+    connect(laserStatusButton, &QPushButton::clicked, this, &ControlDock::onLaserButtonClicked);
 }
 
 void ControlDock::setupSlider() {
-    positionSlider->setMinimum(0);
     positionSlider->setMaximum(MAX_TARGET_POSITION);
-    positionSlider->setSingleStep(1);
     positionSlider->setPageStep(COARSE_STEP);
     positionSlider->setTickPosition(QSlider::TicksAbove);
     positionSlider->setTickInterval(2000);
+
+    thresholdSlider->setMaximum(MAX_THRESHOLD);
+    thresholdSlider->setPageStep(COARSE_STEP);
+    thresholdSlider->setTickPosition(QSlider::TicksBelow);
+    thresholdSlider->setTickInterval(1/THRESHOLD_PER_STEP);
+
+    voltageSlider->setMaximum(MAX_VOLTAGE);
+    voltageSlider->setPageStep(COARSE_STEP);
+    voltageSlider->setTickPosition(QSlider::TicksBelow);
+    voltageSlider->setTickInterval(100/VOLTAGE_PER_STEP);
 }
 
 void ControlDock::onFineLeftClicked() {
@@ -38,7 +62,7 @@ void ControlDock::onFineLeftClicked() {
         targetPosition = 0;
     }
     updateTargetPosition();
-    sendTargetPosition();
+    positionTimer.start(TIMEOUT_MS);
 }
 
 void ControlDock::onCoarseLeftClicked() {
@@ -47,7 +71,7 @@ void ControlDock::onCoarseLeftClicked() {
         targetPosition = 0;
     }
     updateTargetPosition();
-    sendTargetPosition();
+    positionTimer.start(TIMEOUT_MS);
 }
 
 void ControlDock::onFineRightClicked() {
@@ -56,7 +80,7 @@ void ControlDock::onFineRightClicked() {
         targetPosition = MAX_TARGET_POSITION;
     }
     updateTargetPosition();
-    sendTargetPosition();
+    positionTimer.start(TIMEOUT_MS);
 }
 
 void ControlDock::onCoarseRightClicked() {
@@ -65,7 +89,7 @@ void ControlDock::onCoarseRightClicked() {
         targetPosition = MAX_TARGET_POSITION;
     }
     updateTargetPosition();
-    sendTargetPosition();
+    positionTimer.start(TIMEOUT_MS);
 }
 
 void ControlDock::onHomeClicked() {
@@ -74,20 +98,16 @@ void ControlDock::onHomeClicked() {
     targetPositionLabel->setText("Target position: " + QString::number(0) + "mm");
 }
 
-void ControlDock::onSliderMoved() {
+void ControlDock::onPositionSliderMoved() {
     targetPosition = positionSlider->value();
     updateTargetPosition();
-}
-
-void ControlDock::onSliderReleased() {
-    updateTargetPosition();
-    sendTargetPosition();
+    positionTimer.start(TIMEOUT_MS);
 }
 
 void ControlDock::onValueEntered() {
     targetPosition = positionLineEdit->text().toFloat() / MM_PER_STEP;
     updateTargetPosition();
-    sendTargetPosition();
+    positionTimer.start(TIMEOUT_MS);
 }
 
 void ControlDock::updateTargetPosition() {
@@ -98,6 +118,60 @@ void ControlDock::updateTargetPosition() {
 
 void ControlDock::sendTargetPosition() {
     sendPacket(std::make_shared<TargetPositionPacket>(targetPosition));
+}
+
+void ControlDock::onVoltageSliderMoved() {
+    voltageLabel->setText("Acceleration voltage: " + QString::number(voltageSlider->value() * VOLTAGE_PER_STEP) + "V");
+    voltageTimer.start(TIMEOUT_MS);
+}
+
+void ControlDock::sendVoltage() {
+    sendPacket(std::make_shared<VoltagePacket>(voltageSlider->value()));
+}
+
+void ControlDock::onThresholdSliderMoved() {
+    thresholdLabel->setText("Threshold voltage: " + QString::number(thresholdSlider->value() * THRESHOLD_PER_STEP) + "V");
+    thresholdTimer.start(TIMEOUT_MS);
+}
+
+void ControlDock::sendThreshold() {
+    sendPacket(std::make_shared<ThresholdPacket>(thresholdSlider->value()));
+}
+
+void ControlDock::onAmplifierButtonClicked() {
+    if (!amplifierState) {
+        QMessageBox msgBox;
+        msgBox.setText("Amplifier state change");
+        msgBox.setInformativeText("Are you sure you want to turn on the amplifier?");
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        int ret = msgBox.exec();
+        if (ret == QMessageBox::Ok) {
+            amplifierState = true;
+            photomultiplierStatusButton->setText("On");
+            photomultiplierStatusButton->setStyleSheet("QPushButton {color: green;}");
+            sendPacket(std::make_shared<AmplifierPacket>(true));
+        }
+    } else {
+        amplifierState = false;
+        photomultiplierStatusButton->setText("Off");
+        photomultiplierStatusButton->setStyleSheet("QPushButton {color: red;}");
+        sendPacket(std::make_shared<AmplifierPacket>(false));
+    }
+}
+
+void ControlDock::onLaserButtonClicked() {
+    if (!laserState) {
+        laserState = true;
+        laserStatusButton->setText("On");
+        laserStatusButton->setStyleSheet("QPushButton {color: green;}");
+        sendPacket(std::make_shared<LaserPacket>(true));
+    } else {
+        laserState = false;
+        laserStatusButton->setText("Off");
+        laserStatusButton->setStyleSheet("QPushButton {color: red;}");
+        sendPacket(std::make_shared<LaserPacket>(false));
+    }
 }
 
 void ControlDock::onPacketReceived(std::shared_ptr<Packet> packet) {

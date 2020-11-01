@@ -127,16 +127,16 @@
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="accelerationControlLayout">
+       <layout class="QVBoxLayout" name="voltageControlLayout">
         <item>
-         <widget class="QLabel" name="accelerationLabel">
+         <widget class="QLabel" name="voltageLabel">
           <property name="text">
            <string>Acceleration voltage: 1200V</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="accelerationSlider">
+         <widget class="QSlider" name="voltageSlider">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -145,16 +145,16 @@
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="triggerControlLayout">
+       <layout class="QVBoxLayout" name="thresholdControlLayout">
         <item>
-         <widget class="QLabel" name="triggerLabel">
+         <widget class="QLabel" name="thresholdLabel">
           <property name="text">
            <string>Trigger voltage: 1200V</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="triggerSlider">
+         <widget class="QSlider" name="thresholdSlider">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>

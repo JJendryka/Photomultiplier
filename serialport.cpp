@@ -31,6 +31,11 @@ void SerialPort::serialReadReady() {
     while (serialPort.canReadLine()) {
         QString string = serialPort.readLine();
         auto packet = Packet::parsePacket(string);
+        if (packet->type == ERROR_PACKET) {
+            QMessageBox msgBox;
+            msgBox.setText("An error packet has been received: " + std::dynamic_pointer_cast<ErrorPacket>(packet)->error);
+            msgBox.exec();
+        }
         newPacket(packet);
         newRawIncomingPacket(string);
     }

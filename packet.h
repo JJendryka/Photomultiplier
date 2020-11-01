@@ -15,6 +15,7 @@
 #define MEASURE_PACKET 'm'
 #define LASER_STATE_PACKET 'l'
 #define VOLTAGE_PACKET 'v'
+#define THRESHOLD_PACKET 't'
 #define PHOTOMULTIPLIER_STATE_PACKET 'a'
 #define TARGET_POSITION_PACKET 'g'
 
@@ -91,6 +92,58 @@ public:
     }
 
     int position;
+};
+
+class VoltagePacket : public SendablePacket {
+public:
+    VoltagePacket(int voltage) : SendablePacket(VOLTAGE_PACKET) {
+        this->voltage = voltage;
+    }
+
+    QString serialize() override {
+        return appendType(QString::number(voltage));
+    }
+
+    int voltage;
+};
+
+class ThresholdPacket : public SendablePacket {
+public:
+    ThresholdPacket(int threshold) : SendablePacket(THRESHOLD_PACKET) {
+        this->threshold = threshold;
+    }
+
+    QString serialize() override {
+        return appendType(QString::number(threshold));
+    }
+
+    int threshold;
+};
+
+class LaserPacket : public SendablePacket {
+public:
+    LaserPacket(bool state) : SendablePacket(LASER_STATE_PACKET) {
+        this->state = state;
+    }
+
+    QString serialize() override {
+        return appendType(state ? "1" : "0");
+    }
+
+    bool state;
+};
+
+class AmplifierPacket : public SendablePacket {
+public:
+    AmplifierPacket(bool state) : SendablePacket(PHOTOMULTIPLIER_STATE_PACKET) {
+        this->state = state;
+    }
+
+    QString serialize() override {
+        return appendType(state ? "1" : "0");
+    }
+
+    bool state;
 };
 
 #endif // PACKET_H
