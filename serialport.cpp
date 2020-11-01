@@ -40,3 +40,8 @@ void SerialPort::sendRawText(QString string) {
     newRawOutgoingPacket(string);
     serialPort.write(string.toUtf8());
 }
+
+void SerialPort::sendPacket(std::shared_ptr<SendablePacket> packet) {
+    QString string = packet->serialize();
+    sendRawText(string);
+}

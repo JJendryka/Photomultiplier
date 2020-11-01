@@ -23,7 +23,9 @@ public:
 public slots:
     void openPort();
     void serialReadReady();
+
     void sendRawText(QString);
+    void sendPacket(std::shared_ptr<SendablePacket>);
 
 signals:
     void portOpen();

@@ -78,4 +78,7 @@ void MainWindow::connectObjects() {
     connect(&serial, &SerialPort::newRawIncomingPacket, terminalDock, &TerminalDock::rawIncomingPacket);
     connect(&serial, &SerialPort::newRawOutgoingPacket, terminalDock, &TerminalDock::rawOutgoingPacket);
     connect(terminalDock, &TerminalDock::sendRaw, &serial, &SerialPort::sendRawText);
+
+    connect(&serial, &SerialPort::newPacket, controlDock, &ControlDock::onPacketReceived);
+    connect(controlDock, &ControlDock::sendPacket, &serial, &SerialPort::sendPacket);
 }
