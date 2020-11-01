@@ -7,18 +7,18 @@ Packet::Packet(char type)
 
 Packet::~Packet() {}
 
-Packet* Packet::parsePacket(QString string)
+std::shared_ptr<Packet> Packet::parsePacket(QString string)
 {
     switch (string.toStdString()[0]) {
         case ERROR:
-            return new ErrorPacket(string);
+            return std::make_shared<ErrorPacket>(string);
         case MEASUREMENT_RESULT:
-            return new MeasuremetResultPacket(string);
+            return std::make_shared<MeasuremetResultPacket>(string);
         case CURRENT_POSITION:
-            return new CurrentPositionPacker(string);
+            return std::make_shared<CurrentPositionPacker>(string);
         case ENDSTOP_STATE:
-            return new EndstopStatePacket(string);
+            return std::make_shared<EndstopStatePacket>(string);
         default:
-            return new ErrorPacket("E Unrecognized packet: " + string);
+            return std::make_shared<ErrorPacket>("E Unrecognized packet: " + string);
     }
 }

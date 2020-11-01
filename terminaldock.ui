@@ -30,7 +30,11 @@
      </layout>
     </item>
     <item>
-     <widget class="QTextBrowser" name="terminalTextBrowser"/>
+     <widget class="QTextEdit" name="terminalTextEdit">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

@@ -1,6 +1,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include <memory>
 #include <QString>
 #include <QStringList>
 #include <QMetaType>
@@ -19,7 +20,7 @@
 class Packet
 {
 public:
-    static Packet* parsePacket(QString);
+    static std::shared_ptr<Packet> parsePacket(QString);
     virtual ~Packet();
 
     char type;
@@ -28,7 +29,7 @@ protected:
     Packet(char type);
 };
 
-Q_DECLARE_METATYPE(Packet*);
+Q_DECLARE_METATYPE(std::shared_ptr<Packet>);
 
 class SendablePacket : public Packet
 {
@@ -36,7 +37,7 @@ public:
     virtual QString serialize() = 0;
 };
 
-Q_DECLARE_METATYPE(SendablePacket*);
+Q_DECLARE_METATYPE(std::shared_ptr<SendablePacket>);
 
 class ErrorPacket : public Packet {
 public:

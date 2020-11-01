@@ -30,7 +30,13 @@ SerialPort::~SerialPort() {
 void SerialPort::serialReadReady() {
     while (serialPort.canReadLine()) {
         QString string = serialPort.readLine();
-        Packet* packet = Packet::parsePacket(string);
+        auto packet = Packet::parsePacket(string);
         newPacket(packet);
+        newRawIncomingPacket(string);
     }
+}
+
+void SerialPort::sendRawText(QString string) {
+    newRawOutgoingPacket(string);
+    serialPort.write(string.toUtf8());
 }

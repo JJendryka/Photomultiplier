@@ -3,6 +3,10 @@
 
 #include <QMainWindow>
 #include "serialport.h"
+#include "controldock.h"
+#include "measurementdock.h"
+#include "terminaldock.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,8 +30,13 @@ private:
 
     void createPlot();
 
+    void connectObjects();
+
     QMenu *viewMenu;
     Ui::MainWindow *ui;
     SerialPort serial;
+    TerminalDock *terminalDock;
+    ControlDock *controlDock;
+    MeasurementDock *measurementDock;
 };
 #endif // MAINWINDOW_H

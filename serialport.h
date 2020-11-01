@@ -1,11 +1,14 @@
 #ifndef SERIALPORT_H
 #define SERIALPORT_H
 
+#include <memory>
 #include <QSerialPort>
 
 #include "packet.h"
 
-class SerialPort : QObject
+Q_DECLARE_METATYPE(std::shared_ptr<QString>);
+
+class SerialPort : public QObject
 {
     Q_OBJECT
 
@@ -20,10 +23,13 @@ public:
 public slots:
     void openPort();
     void serialReadReady();
+    void sendRawText(QString);
 
 signals:
     void portOpen();
-    void newPacket(Packet*);
+    void newPacket(std::shared_ptr<Packet>);
+    void newRawIncomingPacket(QString);
+    void newRawOutgoingPacket(QString);
 };
 
 #endif // SERIALPORT_H

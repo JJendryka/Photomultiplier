@@ -2,10 +2,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "controldock.h"
-#include "measurementdock.h"
-#include "terminaldock.h"
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     createDocks();
     createPlot();
+
+    connectObjects();
 
     serial.openPort();
 }
@@ -34,21 +32,21 @@ void MainWindow::createDocks() {
 }
 
 void MainWindow::createControlDock() {
-    ControlDock *dock = new ControlDock(this);
-    addDockWidget(Qt::RightDockWidgetArea, dock);
-    viewMenu->addAction(dock->toggleViewAction());
+    controlDock = new ControlDock(this);
+    addDockWidget(Qt::RightDockWidgetArea, controlDock);
+    viewMenu->addAction(controlDock->toggleViewAction());
 }
 
 void MainWindow::createMeasurementDock() {
-    MeasurementDock *dock = new MeasurementDock(this);
-    addDockWidget(Qt::BottomDockWidgetArea, dock);
-    viewMenu->addAction(dock->toggleViewAction());
+    measurementDock = new MeasurementDock(this);
+    addDockWidget(Qt::BottomDockWidgetArea, measurementDock);
+    viewMenu->addAction(measurementDock->toggleViewAction());
 }
 
 void MainWindow::createTerminalDock() {
-    TerminalDock *dock = new TerminalDock(this);
-    addDockWidget(Qt::BottomDockWidgetArea, dock);
-    viewMenu->addAction(dock->toggleViewAction());
+    terminalDock = new TerminalDock(this);
+    addDockWidget(Qt::BottomDockWidgetArea, terminalDock);
+    viewMenu->addAction(terminalDock->toggleViewAction());
 }
 
 void MainWindow::createMenu() {
@@ -74,4 +72,10 @@ void MainWindow::createPlot() {
     chartView->setRenderHint(QPainter::Antialiasing);
 
     setCentralWidget(chartView);
+}
+
+void MainWindow::connectObjects() {
+    connect(&serial, &SerialPort::newRawIncomingPacket, terminalDock, &TerminalDock::rawIncomingPacket);
+    connect(&serial, &SerialPort::newRawOutgoingPacket, terminalDock, &TerminalDock::rawOutgoingPacket);
+    connect(terminalDock, &TerminalDock::sendRaw, &serial, &SerialPort::sendRawText);
 }
