@@ -34,6 +34,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="laserStatusButton">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {color: red;}</string>
+          </property>
           <property name="text">
            <string>Off</string>
           </property>
@@ -58,6 +61,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="photomultiplierStatusButton">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {color: red;}</string>
+          </property>
           <property name="text">
            <string>Off</string>
           </property>
@@ -90,7 +96,7 @@
         <item>
          <widget class="QLabel" name="photonReadout10Label">
           <property name="text">
-           <string>10s avg.: 1012/s</string>
+           <string>10s avg.: -</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -100,7 +106,7 @@
         <item>
          <widget class="QLabel" name="photonReadout1Label">
           <property name="text">
-           <string>1s avg.: 992/s</string>
+           <string>1s avg.: -</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -110,7 +116,7 @@
         <item>
          <widget class="QLabel" name="photonReadout01Label">
           <property name="text">
-           <string>0.1s avg.: 1152/s</string>
+           <string>0.1s avg.: -</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -131,7 +137,7 @@
         <item>
          <widget class="QLabel" name="voltageLabel">
           <property name="text">
-           <string>Acceleration voltage: 1200V</string>
+           <string>Acceleration voltage: -</string>
           </property>
          </widget>
         </item>
@@ -149,7 +155,7 @@
         <item>
          <widget class="QLabel" name="thresholdLabel">
           <property name="text">
-           <string>Trigger voltage: 1200V</string>
+           <string>Threshold voltage: -</string>
           </property>
          </widget>
         </item>
@@ -176,14 +182,14 @@
           <item>
            <widget class="QLabel" name="currentPositionLabel">
             <property name="text">
-             <string>Current position: 10.02mm</string>
+             <string>Current position: -</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="targetPositionLabel">
             <property name="text">
-             <string>Target position: 11.33mm</string>
+             <string>Target position: -</string>
             </property>
            </widget>
           </item>
