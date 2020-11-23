@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     controldock.cpp \
+    experiment.cpp \
     main.cpp \
     mainwindow.cpp \
     measurementdock.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
 
 HEADERS += \
     controldock.h \
+    experiment.h \
     mainwindow.h \
     measurementdock.h \
     packet.h \

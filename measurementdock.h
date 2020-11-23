@@ -11,6 +11,9 @@ class MeasurementDock : public QDockWidget, private Ui::MeasurementDock
 
 public:
     explicit MeasurementDock(QWidget *parent = nullptr);
+
+private:
+    void startExperiment();
 };
 
 #endif // MEASUREMENTDOCK_H
