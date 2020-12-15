@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    basicexperiment.cpp \
     controldock.cpp \
     experiment.cpp \
     main.cpp \
@@ -19,10 +20,12 @@ SOURCES += \
     terminaldock.cpp
 
 HEADERS += \
+    basicexperiment.h \
     controldock.h \
     experiment.h \
     mainwindow.h \
     measurementdock.h \
+    newexperimentdialog.h \
     packet.h \
     serialport.h \
     terminaldock.h

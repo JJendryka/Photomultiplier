@@ -6,6 +6,7 @@
 #include "controldock.h"
 #include "measurementdock.h"
 #include "terminaldock.h"
+#include "experiment.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -32,11 +33,20 @@ private:
 
     void connectObjects();
 
+    QMenu *fileMenu;
     QMenu *viewMenu;
     Ui::MainWindow *ui;
     SerialPort serial;
     TerminalDock *terminalDock;
     ControlDock *controlDock;
     MeasurementDock *measurementDock;
+    QChart *chart;
+    QValueAxis *xAxis;
+    QValueAxis *yAxis;
+
+private slots:
+    void removeSeries(QList<QAbstractSeries *> series);
+    void addSeries(QList<QAbstractSeries *> series);
+    void setAxes(AxesRange range);
 };
 #endif // MAINWINDOW_H

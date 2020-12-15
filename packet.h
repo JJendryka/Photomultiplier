@@ -146,4 +146,17 @@ public:
     bool state;
 };
 
+class MeasurePacket : public SendablePacket {
+public:
+    MeasurePacket(int miliseconds) : SendablePacket(MEASURE_PACKET) {
+        this->miliseconds = miliseconds;
+    }
+
+    QString serialize() override {
+        return appendType(QString::number(miliseconds));
+    }
+
+    int miliseconds;
+};
+
 #endif // PACKET_H

@@ -36,8 +36,8 @@ void SerialPort::serialReadReady() {
             msgBox.setText("An error packet has been received: " + std::dynamic_pointer_cast<ErrorPacket>(packet)->error);
             msgBox.exec();
         }
-        newPacket(packet);
         newRawIncomingPacket(string);
+        newPacket(packet);
     }
 }
 

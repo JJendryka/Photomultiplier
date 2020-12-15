@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
     createDocks();
     createPlot();
 
+    fileMenu->addAction("Save", measurementDock, &MeasurementDock::save);
+
     connectObjects();
 
     serial.openPort();
@@ -51,22 +53,16 @@ void MainWindow::createTerminalDock() {
 
 void MainWindow::createMenu() {
     viewMenu = menuBar()->addMenu("View");
+    fileMenu = menuBar()->addMenu("File");
 }
 
 void MainWindow::createPlot() {
-    QLineSeries *series = new QLineSeries();
-    series->append(0, 6);
-    series->append(2, 4);
-    series->append(3, 8);
-    series->append(7, 4);
-    series->append(10, 5);
-    *series << QPointF(11, 1) << QPointF(13, 3) << QPointF(17, 6) << QPointF(18, 3) << QPointF(20, 2);
-
-    QChart *chart = new QChart();
+    chart = new QChart();
     chart->legend()->hide();
-    chart->addSeries(series);
-    chart->createDefaultAxes();
-    chart->setTitle("Simple line chart example");
+    xAxis = new QValueAxis();
+    yAxis = new QValueAxis();
+    chart->addAxis(xAxis, Qt::AlignBottom);
+    chart->addAxis(yAxis, Qt::AlignLeft);
 
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
@@ -81,4 +77,30 @@ void MainWindow::connectObjects() {
 
     connect(&serial, &SerialPort::newPacket, controlDock, &ControlDock::onPacketReceived);
     connect(controlDock, &ControlDock::sendPacket, &serial, &SerialPort::sendPacket);
+
+    connect(&serial, &SerialPort::newPacket, measurementDock, &MeasurementDock::onPacketReceived);
+    connect(measurementDock, &MeasurementDock::sendPacket, &serial, &SerialPort::sendPacket);
+    connect(measurementDock, &MeasurementDock::removeSeries, this, &MainWindow::removeSeries);
+    connect(measurementDock, &MeasurementDock::addSeries, this, &MainWindow::addSeries);
+    connect(measurementDock, &MeasurementDock::setAxes, this, &MainWindow::setAxes);
+}
+
+void MainWindow::removeSeries(QList<QAbstractSeries *> series) {
+    foreach (QAbstractSeries *s, series) {
+        chart->removeSeries(s);
+    }
+}
+void MainWindow::addSeries(QList<QAbstractSeries *> series) {
+    foreach (QAbstractSeries *s, series) {
+        chart->addSeries(s);
+        s->attachAxis(xAxis);
+        s->attachAxis(yAxis);
+    }
+
+}
+void MainWindow::setAxes(AxesRange range) {
+    xAxis->setMin(range.minX);
+    xAxis->setMax(range.maxX);
+    yAxis->setMin(range.minY);
+    yAxis->setMax(range.maxY);
 }
